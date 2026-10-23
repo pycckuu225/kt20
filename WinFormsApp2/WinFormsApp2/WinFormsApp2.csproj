@@ -23,4 +23,13 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <!-- Снимаем "mark of the web" с .resx перед генерацией ресурсов,
+       иначе MSBuild падает с MSB3821. Нужно только на Windows. -->
+  <Target Name="UnblockResx" BeforeTargets="CoreResGen" Condition="'$(OS)' == 'Windows_NT'">
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;Get-ChildItem -LiteralPath '$(MSBuildProjectDirectory)' -Recurse -File -Filter *.resx | Unblock-File&quot;"
+          ContinueOnError="true"
+          StandardOutputImportance="Low"
+          StandardErrorImportance="Low" />
+  </Target>
+
 </Project>
